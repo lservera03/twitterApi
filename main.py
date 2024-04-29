@@ -6,9 +6,11 @@ from model.models import *
 
 
 def main():
-    response = tweets_api.get_user_tweets_by_user_id("1359418375076773888")
+    tweets = tweets_api.get_user_tweets_by_user_id("1359418375076773888")
 
-    print(response.__len__())
+    print(tweets)
+
+    mongo.save_user_tweets(tweets)
 
 
 # user_id = users.get_user_id_by_username("FormulaDirecta")

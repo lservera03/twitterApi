@@ -5,6 +5,7 @@ from model.models import *
 db_path = config.mongodb_path
 db_database = config.mongodb_database
 db_user_collection = config.mongodb_user_collection
+db_tweet_collection = config.mongodb_tweet_collection
 
 client = pymongo.MongoClient(db_path)
 
@@ -19,3 +20,20 @@ def save_user(user: User):
         print("User " + user.username + " inserted successfully")
     else:
         print("User insertion failed")
+
+
+def save_user_tweets(tweets: [Tweet]):
+    db = client[db_database]
+    collection = db[db_tweet_collection]
+
+    # convert Tweet list to list of tweet dictionaries
+    aux = []
+    for tweet in tweets:
+        aux.append(tweet.__dict__)
+
+    inserted = collection.insert_many(aux)
+
+    if inserted.acknowledged is True:
+        print("Tweets of user " + tweets[0].author_id + " inserted successfully")
+    else:
+        print("Tweets insertion failed")

@@ -29,9 +29,11 @@ def get_user_tweets_by_user_id(user_id):
         response = requests.get(url=URL + f"/{user_id}/tweets", headers=headers, params=params)
         data = response.json()
 
+        # TODO: manage when there are 0 results (meta object)
+
         if response.status_code == 200:
             for tweet in data["data"]:
-                tweets.append(Tweet(tweet["id"], tweet["author_id"], user_id, tweet["lang"]))
+                tweets.append(Tweet(tweet["id"], tweet["text"], tweet["author_id"], tweet["lang"]))
 
             if "next_token" in data["meta"]:  # Continue to send requests
                 pagination = data["meta"]["next_token"]
