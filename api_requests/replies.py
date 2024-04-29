@@ -29,17 +29,22 @@ def get_user_replies(user_id):
         response = requests.get(url=URL + f"/{user_id}/mentions", headers=headers, params=params)
         data = response.json()
 
-        # TODO: manage when there are 0 results (meta object)
+        # Check if it has found replies
+        if data["meta"]["result_count"] != 0:
 
-        if response.status_code == 200:
-            for tweet in data["data"]:
-                tweets.append(Reply(tweet["id"], tweet["text"], tweet["author_id"], tweet["lang"], "reply", user_id))
+            if response.status_code == 200:
+                for tweet in data["data"]:
+                    tweets.append(
+                        Reply(tweet["id"], tweet["text"], tweet["author_id"], tweet["lang"], "reply", user_id))
 
-            if "next_token" in data["meta"]:  # Continue to send requests
-                pagination = data["meta"]["next_token"]
+                if "next_token" in data["meta"]:  # Continue to send requests
+                    pagination = data["meta"]["next_token"]
+                else:
+                    return tweets
             else:
-                return tweets
+                print(response)
+                print(response.status_code)
+                return None
         else:
-            print(response)
-            print(response.status_code)
+            print("No replies found")
             return None

@@ -7,9 +7,11 @@ from model.models import *
 
 
 def main():
-    tweet = mongo.get_last_reply_by_user_id("1359418375076773888")
+    # tweet = mongo.get_last_reply_by_user_id("1359418375076773888")
 
-    print(tweet.text)
+    last_tweet = mongo.get_last_tweet_by_user_id("1359418375076773888")
+
+    tweets = tweets_api.get_user_tweets_by_user_id("1359418375076773888", last_tweet.tweet_id)
 
     # replies = replies_api.get_user_replies("1359418375076773888")
 

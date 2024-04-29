@@ -9,7 +9,7 @@ bearer_token = config.bearer_token
 URL = "https://api.twitter.com/2/users"
 
 
-def get_user_tweets_by_user_id(user_id):
+def get_user_tweets_by_user_id(user_id, last_tweet_id):
     tweets = []
     pagination = None
     stop = False
@@ -21,6 +21,9 @@ def get_user_tweets_by_user_id(user_id):
         "tweet.fields": "author_id,id,lang"
     }
 
+    if last_tweet_id is not None:  # If it is not the first time we request this user's tweets
+        params["since_id"] = last_tweet_id
+
     while stop is False:
         if pagination is not None:  # If it is not the first request
             params["pagination_token"] = pagination
@@ -29,17 +32,21 @@ def get_user_tweets_by_user_id(user_id):
         response = requests.get(url=URL + f"/{user_id}/tweets", headers=headers, params=params)
         data = response.json()
 
-        # TODO: manage when there are 0 results (meta object)
+        # Check if it has found tweets
+        if data["meta"]["result_count"] != 0:
 
-        if response.status_code == 200:
-            for tweet in data["data"]:
-                tweets.append(Tweet(tweet["id"], tweet["text"], tweet["author_id"], tweet["lang"], "tweet"))
+            if response.status_code == 200:
+                for tweet in data["data"]:
+                    tweets.append(Tweet(tweet["id"], tweet["text"], tweet["author_id"], tweet["lang"], "tweet"))
 
-            if "next_token" in data["meta"]:  # Continue to send requests
-                pagination = data["meta"]["next_token"]
+                if "next_token" in data["meta"]:  # Continue to send requests
+                    pagination = data["meta"]["next_token"]
+                else:
+                    return tweets
             else:
-                return tweets
+                print(response)
+                print(response.status_code)
+                return None
         else:
-            print(response)
-            print(response.status_code)
+            print("No tweets found for user: " + str(user_id))
             return None
