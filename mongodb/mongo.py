@@ -64,7 +64,11 @@ def get_last_tweet_by_user_id(user_id):
 
     tweets = collection.find(query).sort("tweet_id", pymongo.DESCENDING).limit(1)
 
-    return Tweet(tweets[0]["tweet_id"], tweets[0]["text"], tweets[0]["author_id"], tweets[0]["lang"], tweets[0]["type"])
+    if tweets.alive is True:  # If there are results
+        return Tweet(tweets[0]["tweet_id"], tweets[0]["text"], tweets[0]["author_id"], tweets[0]["lang"],
+                     tweets[0]["type"])
+    else:
+        return None
 
 
 def get_last_reply_by_user_id(user_id):
@@ -75,5 +79,8 @@ def get_last_reply_by_user_id(user_id):
 
     replies = collection.find(query).sort("tweet_id", pymongo.DESCENDING).limit(1)
 
-    return Reply(replies[0]["tweet_id"], replies[0]["text"], replies[0]["author_id"], replies[0]["lang"],
-                 replies[0]["type"], replies[0]["reply_to"])
+    if replies.alive is True:  # If there are results
+        return Reply(replies[0]["tweet_id"], replies[0]["text"], replies[0]["author_id"], replies[0]["lang"],
+                     replies[0]["type"], replies[0]["reply_to"])
+    else:
+        return None
