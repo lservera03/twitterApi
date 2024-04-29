@@ -5,8 +5,15 @@ class User:
 
 
 class Tweet:
-    def __init__(self, tweet_id, text, author_id, lang):
+    def __init__(self, tweet_id, text, author_id, lang, tweet_type):
         self.tweet_id = tweet_id
         self.text = text
         self.author_id = author_id
         self.lang = lang
+        self.type = tweet_type
+
+
+class Reply(Tweet):
+    def __init__(self, tweet_id, text, author_id, lang, tweet_type, reply_to):
+        super().__init__(tweet_id, text, author_id, lang, tweet_type)
+        self.reply_to = reply_to

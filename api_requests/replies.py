@@ -2,14 +2,14 @@ from time import sleep
 
 import requests
 import config
-from model.models import Tweet
+from model.models import *
 
 bearer_token = config.bearer_token
 
 URL = "https://api.twitter.com/2/users"
 
 
-def get_user_tweets_by_user_id(user_id):
+def get_user_replies(user_id):
     tweets = []
     pagination = None
     stop = False
@@ -17,7 +17,7 @@ def get_user_tweets_by_user_id(user_id):
     headers = {"Authorization": f"Bearer {bearer_token}"}
 
     params = {
-        "start_time": "2024-04-26T00:00:00Z",  # TODO: manage better the date (not hardcoded)
+        "start_time": "2024-04-29T00:00:00Z",  # TODO: manage better the date (not hardcoded)
         "tweet.fields": "author_id,id,lang"
     }
 
@@ -26,14 +26,14 @@ def get_user_tweets_by_user_id(user_id):
             params["pagination_token"] = pagination
             sleep(60)  # 1min delay between requests needed to not exceed Twitter API max requests allowed per endpoint
 
-        response = requests.get(url=URL + f"/{user_id}/tweets", headers=headers, params=params)
+        response = requests.get(url=URL + f"/{user_id}/mentions", headers=headers, params=params)
         data = response.json()
 
         # TODO: manage when there are 0 results (meta object)
 
         if response.status_code == 200:
             for tweet in data["data"]:
-                tweets.append(Tweet(tweet["id"], tweet["text"], tweet["author_id"], tweet["lang"], "tweet"))
+                tweets.append(Reply(tweet["id"], tweet["text"], tweet["author_id"], tweet["lang"], "reply", user_id))
 
             if "next_token" in data["meta"]:  # Continue to send requests
                 pagination = data["meta"]["next_token"]
