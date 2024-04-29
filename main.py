@@ -7,12 +7,14 @@ from model.models import *
 
 
 def main():
-    replies = replies_api.get_user_replies("1359418375076773888")
+    tweet = mongo.get_last_tweet_by_user_id("1359418375076773888")
 
-    print(replies)
-    print(replies.__len__())
+    # replies = replies_api.get_user_replies("1359418375076773888")
 
-    mongo.save_user_replies(replies)
+    # print(replies)
+    # print(replies.__len__())
+
+    # mongo.save_user_replies(replies)
 
 
 # user_id = users.get_user_id_by_username("FormulaDirecta")

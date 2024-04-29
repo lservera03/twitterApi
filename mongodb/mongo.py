@@ -54,3 +54,14 @@ def save_user_replies(tweets: [Reply]):
         print("Replies to user " + tweets[0].reply_to + " inserted successfully")
     else:
         print("Replies insertion failed")
+
+
+def get_last_tweet_by_user_id(user_id):
+    db = client[db_database]
+    collection = db[db_tweet_collection]
+
+    query = {"$and": [{"author_id": user_id}, {"type": "tweet"}]}
+
+    tweets = collection.find(query).sort("tweet_id", pymongo.DESCENDING).limit(1)
+
+    return Tweet(tweets[0]["tweet_id"], tweets[0]["text"], tweets[0]["author_id"], tweets[0]["lang"], tweets[0]["type"])
