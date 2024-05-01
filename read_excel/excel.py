@@ -9,5 +9,5 @@ USERNAME_COLUMN = "Username"
 def get_usernames_from_excel():
     df = pd.read_excel(path)
 
-    # TODO: Maybe check if the usernames are with the @ at the beginning
+    # TODO: Check if the usernames are with the @ at the beginning
     return df[USERNAME_COLUMN]

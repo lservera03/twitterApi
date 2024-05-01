@@ -22,6 +22,40 @@ def save_user(user: User):
         print("User insertion failed")
 
 
+def check_user_exists_by_username(username) -> bool:
+    db = client[db_database]
+    collection = db[db_user_collection]
+
+    users = collection.find({"username": username})
+
+    try:
+        user = users[0]
+        return True
+    except IndexError:
+        return False
+
+
+def get_number_of_users() -> int:
+    db = client[db_database]
+    collection = db[db_user_collection]
+
+    return collection.count_documents({})
+
+
+def get_all_users() -> [User]:
+    db = client[db_database]
+    collection = db[db_user_collection]
+
+    users = collection.find()
+
+    users_list = []
+
+    for result in users:
+        users_list.append(User(result["username"], result["twitter_id"]))
+
+    return users_list
+
+
 def save_user_tweets(tweets: [Tweet]):
     db = client[db_database]
     collection = db[db_tweet_collection]
@@ -56,7 +90,7 @@ def save_user_replies(tweets: [Reply]):
         print("Replies insertion failed")
 
 
-def get_last_tweet_by_user_id(user_id):
+def get_last_tweet_by_user_id(user_id):  # TODO: change parameter to receive a user instead of the user id
     db = client[db_database]
     collection = db[db_tweet_collection]
 
@@ -72,7 +106,7 @@ def get_last_tweet_by_user_id(user_id):
         return None
 
 
-def get_last_reply_by_user_id(user_id):
+def get_last_reply_by_user_id(user_id):  # TODO: change parameter to receive a user instead of the user id
     db = client[db_database]
     collection = db[db_tweet_collection]
 

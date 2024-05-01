@@ -9,7 +9,7 @@ bearer_token = config.bearer_token
 URL = "https://api.twitter.com/2/users"
 
 
-def get_user_replies(user_id):
+def get_user_replies(user_id, last_reply_id):
     tweets = []
     pagination = None
     stop = False
@@ -20,6 +20,9 @@ def get_user_replies(user_id):
         "start_time": "2024-04-29T00:00:00Z",  # TODO: manage better the date (not hardcoded)
         "tweet.fields": "author_id,id,lang"
     }
+
+    if last_reply_id is not None:  # If it is not the first time we request this user's replies
+        params["since_id"] = last_reply_id
 
     while stop is False:
         if pagination is not None:  # If it is not the first request
