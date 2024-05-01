@@ -1,3 +1,4 @@
+import logging
 from time import sleep
 
 import requests
@@ -17,15 +18,18 @@ def get_user_replies(user_id, last_reply_id):
     headers = {"Authorization": f"Bearer {bearer_token}"}
 
     params = {
-        "start_time": "2024-04-29T00:00:00Z",  # TODO: manage better the date (not hardcoded)
+        "start_time": "2024-04-30T00:00:00Z",  # TODO: manage better the date (not hardcoded)
         "tweet.fields": "author_id,id,lang"
     }
 
     if last_reply_id is not None:  # If it is not the first time we request this user's replies
+        logging.info(
+            "Requesting user replies of user " + user_id + " with last reply id query parameter: " + last_reply_id)
         params["since_id"] = last_reply_id
 
     while stop is False:
         if pagination is not None:  # If it is not the first request
+            logging.info("User replies request with pagination")
             params["pagination_token"] = pagination
             sleep(60)  # 1min delay between requests needed to not exceed Twitter API max requests allowed per endpoint
 
@@ -43,11 +47,11 @@ def get_user_replies(user_id, last_reply_id):
                 if "next_token" in data["meta"]:  # Continue to send requests
                     pagination = data["meta"]["next_token"]
                 else:
+                    logging.info("Found " + str(tweets.__len__()) + " replies for user " + user_id)
                     return tweets
             else:
-                print(response)
-                print(response.status_code)
+                logging.info("User replies API request error: " + str(response))
                 return None
         else:
-            print("No replies found")
+            logging.info("No replies found for user: " + str(user_id))
             return None

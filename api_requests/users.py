@@ -1,3 +1,5 @@
+import logging
+
 import requests
 import config
 
@@ -13,8 +15,8 @@ def get_user_id_by_username(username):
     data = response.json()
 
     if response.status_code == 200:
+        logging.info(username + " ID received: " + data["data"]["id"])
         return data["data"]["id"]
     else:
-        print(response)
-        print(response.status_code)
+        logging.info("Get user id API response error: " + str(response))
         return None

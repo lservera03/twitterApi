@@ -1,3 +1,5 @@
+import logging
+
 import pymongo
 import config
 from model.models import *
@@ -17,9 +19,9 @@ def save_user(user: User):
     inserted = collection.insert_one(user.__dict__)
 
     if inserted.inserted_id is not None:
-        print("User " + user.username + " inserted successfully")
+        logging.info(user.username + " inserted into database successfully")
     else:
-        print("User insertion failed")
+        logging.info(user.username + " insertion into database failed")
 
 
 def check_user_exists_by_username(username) -> bool:
@@ -53,6 +55,8 @@ def get_all_users() -> [User]:
     for result in users:
         users_list.append(User(result["username"], result["twitter_id"]))
 
+    logging.info("Requested all the users from the database, found: " + str(users_list.__len__()))
+
     return users_list
 
 
@@ -68,9 +72,9 @@ def save_user_tweets(tweets: [Tweet]):
     inserted = collection.insert_many(aux)
 
     if inserted.acknowledged is True:
-        print("Tweets of user " + tweets[0].author_id + " inserted successfully")
+        logging.info("Tweets of user " + tweets[0].author_id + " inserted into database successfully")
     else:
-        print("Tweets insertion failed")
+        logging.info("Tweets of user " + tweets[0].author_id + " insertion into database failed")
 
 
 def save_user_replies(tweets: [Reply]):
@@ -85,9 +89,9 @@ def save_user_replies(tweets: [Reply]):
     inserted = collection.insert_many(aux)
 
     if inserted.acknowledged is True:
-        print("Replies to user " + tweets[0].reply_to + " inserted successfully")
+        logging.info("Replies to user " + tweets[0].reply_to + " inserted into database successfully")
     else:
-        print("Replies insertion failed")
+        logging.info("Replies to user " + tweets[0].reply_to + " insertion into database failed")
 
 
 def get_last_tweet_by_user_id(user_id):  # TODO: change parameter to receive a user instead of the user id
@@ -100,9 +104,11 @@ def get_last_tweet_by_user_id(user_id):  # TODO: change parameter to receive a u
 
     # Try and except to catch when there are no results of the query
     try:
+        logging.info("Found last tweet of user " + user_id + " with tweet id: " + str(tweets[0]["tweet_id"]))
         return Tweet(tweets[0]["tweet_id"], tweets[0]["text"], tweets[0]["author_id"], tweets[0]["lang"],
                      tweets[0]["type"])
     except IndexError:
+        logging.info("No last tweet found for user " + user_id)
         return None
 
 
@@ -116,7 +122,9 @@ def get_last_reply_by_user_id(user_id):  # TODO: change parameter to receive a u
 
     # Try and except to catch when there are no results of the query
     try:
+        logging.info("Found last reply for user " + user_id + " with tweet id: " + str(replies[0]["tweet_id"]))
         return Reply(replies[0]["tweet_id"], replies[0]["text"], replies[0]["author_id"], replies[0]["lang"],
                      replies[0]["type"], replies[0]["reply_to"])
     except IndexError:
+        logging.info("No last reply found for user " + user_id)
         return None

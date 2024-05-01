@@ -1,23 +1,31 @@
 import argparse
+import logging
+from datetime import datetime
 
-import api_requests.users as users_api
-import api_requests.tweets as tweets_api
-import api_requests.replies as replies_api
-import read_excel.excel as excel
-import mongodb.mongo as mongo
 import controller.controller as controller
-from model.models import *
 
 
-# TODO: create log management
+# TODO: improve/implement error handling
 
 def main():
     check_excel = args.check_excel
+    logging.info("Check excel set to: {}".format(check_excel))
     controller.execute(check_excel)
 
 
 if __name__ == "__main__":
+    # Needed to receive arguments when executing the script
     parser = argparse.ArgumentParser()
     parser.add_argument("--check_excel", required=True, type=bool)
     args = parser.parse_args()
+
+    # Needed to keep track of the execution logs
+    execution_datetime = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
+    # Create log file
+    file = open("logs/" + execution_datetime + ".log", 'a')
+    file.close()
+
+    logging.basicConfig(level=logging.DEBUG, filename="logs/" + execution_datetime + ".log", filemode="a")
+
     main()
