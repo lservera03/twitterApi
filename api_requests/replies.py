@@ -6,6 +6,7 @@ import config
 from model.models import *
 
 bearer_token = config.bearer_token
+api_start_date = config.api_start_date
 
 URL = "https://api.twitter.com/2/users"
 
@@ -18,7 +19,7 @@ def get_user_replies(user_id, last_reply_id):
     headers = {"Authorization": f"Bearer {bearer_token}"}
 
     params = {
-        "start_time": "2024-04-30T00:00:00Z",  # TODO: manage better the date (not hardcoded)
+        "start_time": api_start_date,
         "tweet.fields": "author_id,id,lang"
     }
 
