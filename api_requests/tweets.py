@@ -20,7 +20,8 @@ def get_user_tweets_by_user_id(user_id, last_tweet_id):
 
     params = {
         "start_time": api_start_date,
-        "tweet.fields": "author_id,id,lang"
+        "tweet.fields": "author_id,id,lang",
+        "max_results": 100
     }
 
     if last_tweet_id is not None:  # If it is not the first time we request this user's tweets
