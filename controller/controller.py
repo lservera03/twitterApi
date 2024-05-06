@@ -1,4 +1,5 @@
 import logging
+from time import sleep
 
 import read_excel.excel as excel
 import mongodb.mongo as mongo
@@ -20,6 +21,7 @@ def execute(check_excel: bool):
         for user in users:
             download_tweets(user)
             download_replies(user)
+            sleep(60)  # 1min delay between requests needed to not exceed Twitter API max requests allowed per endpoint
 
     # (Maybe) save all the quotes for every tweet
 
@@ -37,7 +39,13 @@ def check_users_excel():
 def download_tweets(user: User):
     logging.info("Downloading tweets from " + user.username)
     last_tweet = mongo.get_last_tweet_by_user_id(user.twitter_id)
-    tweets = tweets_api.get_user_tweets_by_user_id(user.twitter_id, last_tweet.tweet_id)
+
+    if last_tweet is None:
+        last_tweet_id = None
+    else:
+        last_tweet_id = last_tweet.tweet_id
+
+    tweets = tweets_api.get_user_tweets_by_user_id(user.twitter_id, last_tweet_id)
 
     if tweets is not None:
         mongo.save_user_tweets(tweets)
@@ -46,7 +54,13 @@ def download_tweets(user: User):
 def download_replies(user: User):
     logging.info("Downloading replies from " + user.username)
     last_reply = mongo.get_last_reply_by_user_id(user.twitter_id)
-    replies = replies_api.get_user_replies(user.twitter_id, last_reply.tweet_id)
+
+    if last_reply is None:
+        last_reply_id = None
+    else:
+        last_reply_id = last_reply.tweet_id
+
+    replies = replies_api.get_user_replies(user.twitter_id, last_reply_id)
 
     if replies is not None:
         mongo.save_user_replies(replies)

@@ -2,18 +2,15 @@ import argparse
 import logging
 from datetime import datetime
 
-import api_requests.users
-from read_excel import excel
-from api_requests import *
-
 import controller.controller as controller
 
 
 # TODO: improve/implement error handling
+# TODO: maybe send get user id request with a list (10 -> 100)
 
 def main():
     check_excel = args.check_excel
-    logging.info("Check excel set to: {}".format(check_excel))
+    logging.info("Check excel set to: " + check_excel)
     controller.execute(check_excel)
 
 
