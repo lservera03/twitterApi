@@ -20,7 +20,7 @@ def get_user_replies(user_id, last_reply_id):
 
     params = {
         "start_time": api_start_date,
-        "tweet.fields": "author_id,id,lang",
+        "tweet.fields": "author_id,id,lang,conversation_id",
         "max_results": 100
     }
 
@@ -44,7 +44,8 @@ def get_user_replies(user_id, last_reply_id):
             if response.status_code == 200:
                 for tweet in data["data"]:
                     tweets.append(
-                        Reply(tweet["id"], tweet["text"], tweet["author_id"], tweet["lang"], "reply", user_id))
+                        Reply(tweet["id"], tweet["text"], tweet["author_id"], tweet["lang"], "reply", user_id,
+                              tweet["conversation_id"]))
 
                 if "next_token" in data["meta"]:  # Continue to send requests
                     pagination = data["meta"]["next_token"]

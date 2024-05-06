@@ -124,7 +124,7 @@ def get_last_reply_by_user_id(user_id):  # TODO: change parameter to receive a u
     try:
         logging.info("Found last reply for user " + user_id + " with tweet id: " + str(replies[0]["tweet_id"]))
         return Reply(replies[0]["tweet_id"], replies[0]["text"], replies[0]["author_id"], replies[0]["lang"],
-                     replies[0]["type"], replies[0]["reply_to"])
+                     replies[0]["type"], replies[0]["reply_to"], replies[0]["conversation_id"])
     except IndexError:
         logging.info("No last reply found for user " + user_id)
         return None

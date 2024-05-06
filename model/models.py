@@ -14,6 +14,7 @@ class Tweet:
 
 
 class Reply(Tweet):
-    def __init__(self, tweet_id, text, author_id, lang, tweet_type, reply_to):
+    def __init__(self, tweet_id, text, author_id, lang, tweet_type, reply_to, conversation_id):
         super().__init__(tweet_id, text, author_id, lang, tweet_type)
         self.reply_to = reply_to
+        self.conversation_id = conversation_id

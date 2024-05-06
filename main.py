@@ -10,7 +10,7 @@ import controller.controller as controller
 
 def main():
     check_excel = args.check_excel
-    logging.info("Check excel set to: " + check_excel)
+    logging.info("Check excel set to: " + str(check_excel))
     controller.execute(check_excel)
 
 
