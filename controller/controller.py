@@ -23,17 +23,29 @@ def execute(check_excel: bool):
             download_replies(user)
             sleep(60)  # 1min delay between requests needed to not exceed Twitter API max requests allowed per endpoint
 
-    # (Maybe) save all the quotes for every tweet
-
 
 def check_users_excel():
+    stop = False
+    start = 0
+    end = 99
+    aux_usernames = []
+
     usernames = excel.get_usernames_from_excel()
-    #  save all the users that are not already saved in mongodb
+
+    # save all the users that are not already saved in mongodb
     for username in usernames:
         if mongo.check_user_exists_by_username(username) is False:
-            logging.info(username + " did not exists in database")
-            user_id = users_api.get_user_id_by_username(username)
-            mongo.save_user(User(username, user_id))
+            aux_usernames.append(username)
+
+    while stop is False:
+        aux_list = aux_usernames[start:end]
+        if len(aux_list) != 0:
+            users = users_api.get_users_id_by_username_list(aux_list)
+            mongo.save_users_list(users)
+            start = end
+            end += 100
+        else:
+            stop = True
 
 
 def download_tweets(user: User):

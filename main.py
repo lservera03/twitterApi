@@ -6,7 +6,6 @@ import controller.controller as controller
 
 
 # TODO: improve/implement error handling
-# TODO: maybe send get user id request with a list (10 -> 100)
 # TODO: check if all the tweets are saved
 
 def main():

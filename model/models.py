@@ -1,6 +1,7 @@
 class User:
-    def __init__(self, username, twitter_id):
+    def __init__(self, username, name, twitter_id):
         self.username = username
+        self.name = name
         self.twitter_id = twitter_id
 
 

@@ -24,6 +24,22 @@ def save_user(user: User):
         logging.info(user.username + " insertion into database failed")
 
 
+def save_users_list(users_list: [User]):
+    db = client[db_database]
+    collection = db[db_user_collection]
+
+    list_insert = []
+    for user in users_list:
+        list_insert.append(user.__dict__)
+
+    inserted = collection.insert_many(list_insert)
+
+    if inserted.acknowledged is True:
+        logging.info("Users inserted into database successfully")
+    else:
+        logging.info("Users insertion into database failed")
+
+
 def check_user_exists_by_username(username) -> bool:
     db = client[db_database]
     collection = db[db_user_collection]
@@ -53,7 +69,7 @@ def get_all_users() -> [User]:
     users_list = []
 
     for result in users:
-        users_list.append(User(result["username"], result["twitter_id"]))
+        users_list.append(User(result["username"], result["name"], result["twitter_id"]))
 
     logging.info("Requested all the users from the database, found: " + str(users_list.__len__()))
 

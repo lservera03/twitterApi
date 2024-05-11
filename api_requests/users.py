@@ -2,6 +2,7 @@ import logging
 
 import requests
 import config
+from model.models import User
 
 bearer_token = config.bearer_token
 
@@ -22,7 +23,7 @@ def get_user_id_by_username(username):
         return None
 
 
-def get_user_id_and_followers_by_username_list(usernames: []) -> [{}]:
+def get_users_id_by_username_list(usernames: []) -> [User]:
     aux = ""
     length = len(usernames)
     for username in usernames:
@@ -31,20 +32,19 @@ def get_user_id_and_followers_by_username_list(usernames: []) -> [{}]:
             aux = aux + ","
 
     headers = {"Authorization": f"Bearer {bearer_token}"}
-    params = {"user.fields": "public_metrics", "usernames": aux}
+    params = {"usernames": aux}
 
     response = requests.get(url=URL + "/by", headers=headers, params=params)
     data = response.json()
 
-    user_info_list = []
+    user_list = []
 
     if response.status_code == 200:
-        # logging.info(username + " ID received: " + data["data"]["id"])
+        logging.info("Received users in get ID request")
         for user in data["data"]:
-            user_info_list.append({"followers_count": user["public_metrics"]["followers_count"],
-                                   "tweet_count": user["public_metrics"]["tweet_count"]})
+            user_list.append(User(user["username"], user["name"], user["id"]))
 
-        return user_info_list
+        return user_list
     else:
-        logging.info("Get user id API response error: " + str(response))
+        logging.info("Get users id API response error: " + str(response))
         return None
