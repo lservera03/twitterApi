@@ -60,7 +60,7 @@ def get_all_users() -> [User]:
     return users_list
 
 
-def save_user_tweets(tweets: [Tweet]):
+def save_user_tweets(tweets: [Tweet], user: User):
     db = client[db_database]
     collection = db[db_tweet_collection]
 
@@ -72,12 +72,12 @@ def save_user_tweets(tweets: [Tweet]):
     inserted = collection.insert_many(aux)
 
     if inserted.acknowledged is True:
-        logging.info("Tweets of user " + tweets[0].author_id + " inserted into database successfully")
+        logging.info("Tweets of user " + user.username + " inserted into database successfully")
     else:
-        logging.info("Tweets of user " + tweets[0].author_id + " insertion into database failed")
+        logging.info("Tweets of user " + user.username + " insertion into database failed")
 
 
-def save_user_replies(tweets: [Reply]):
+def save_user_replies(tweets: [Reply], user: User):
     db = client[db_database]
     collection = db[db_tweet_collection]
 
@@ -89,42 +89,42 @@ def save_user_replies(tweets: [Reply]):
     inserted = collection.insert_many(aux)
 
     if inserted.acknowledged is True:
-        logging.info("Replies to user " + tweets[0].reply_to + " inserted into database successfully")
+        logging.info("Replies to user " + user.username + " inserted into database successfully")
     else:
-        logging.info("Replies to user " + tweets[0].reply_to + " insertion into database failed")
+        logging.info("Replies to user " + user.username + " insertion into database failed")
 
 
-def get_last_tweet_by_user_id(user_id):  # TODO: change parameter to receive a user instead of the user id
+def get_last_tweet_by_user(user: User):
     db = client[db_database]
     collection = db[db_tweet_collection]
 
-    query = {"$and": [{"author_id": user_id}, {"type": "tweet"}]}
+    query = {"$and": [{"author_id": user.twitter_id}, {"type": "tweet"}]}
 
     tweets = collection.find(query).sort("tweet_id", pymongo.DESCENDING).limit(1)
 
     # Try and except to catch when there are no results of the query
     try:
-        logging.info("Found last tweet of user " + user_id + " with tweet id: " + str(tweets[0]["tweet_id"]))
+        logging.info("Found last tweet of user " + user.username + " with tweet id: " + str(tweets[0]["tweet_id"]))
         return Tweet(tweets[0]["tweet_id"], tweets[0]["text"], tweets[0]["author_id"], tweets[0]["lang"],
                      tweets[0]["type"])
     except IndexError:
-        logging.info("No last tweet found for user " + user_id)
+        logging.info("No last tweet found for user " + user.username)
         return None
 
 
-def get_last_reply_by_user_id(user_id):  # TODO: change parameter to receive a user instead of the user id
+def get_last_reply_by_user(user: User):
     db = client[db_database]
     collection = db[db_tweet_collection]
 
-    query = {"$and": [{"reply_to": user_id}, {"type": "reply"}]}
+    query = {"$and": [{"reply_to": user.twitter_id}, {"type": "reply"}]}
 
     replies = collection.find(query).sort("tweet_id", pymongo.DESCENDING).limit(1)
 
     # Try and except to catch when there are no results of the query
     try:
-        logging.info("Found last reply for user " + user_id + " with tweet id: " + str(replies[0]["tweet_id"]))
+        logging.info("Found last reply for user " + user.username + " with tweet id: " + str(replies[0]["tweet_id"]))
         return Reply(replies[0]["tweet_id"], replies[0]["text"], replies[0]["author_id"], replies[0]["lang"],
                      replies[0]["type"], replies[0]["reply_to"], replies[0]["conversation_id"])
     except IndexError:
-        logging.info("No last reply found for user " + user_id)
+        logging.info("No last reply found for user " + user.username)
         return None

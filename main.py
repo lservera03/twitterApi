@@ -13,7 +13,7 @@ def main():
     check_excel = args.check_excel
     print(check_excel)
     logging.info("Check excel set to: " + str(check_excel))
-    # controller.execute(check_excel)
+    controller.execute(check_excel)
 
 
 # Function to detect correctly boolean argument passed to execution

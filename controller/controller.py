@@ -38,22 +38,22 @@ def check_users_excel():
 
 def download_tweets(user: User):
     logging.info("Downloading tweets from " + user.username)
-    last_tweet = mongo.get_last_tweet_by_user_id(user.twitter_id)
+    last_tweet = mongo.get_last_tweet_by_user(user.twitter_id)
 
     if last_tweet is None:
         last_tweet_id = None
     else:
         last_tweet_id = last_tweet.tweet_id
 
-    tweets = tweets_api.get_user_tweets_by_user_id(user.twitter_id, last_tweet_id)
+    tweets = tweets_api.get_user_tweets_by_user_id(user, last_tweet_id)
 
     if tweets is not None:
-        mongo.save_user_tweets(tweets)
+        mongo.save_user_tweets(tweets, user)
 
 
 def download_replies(user: User):
     logging.info("Downloading replies from " + user.username)
-    last_reply = mongo.get_last_reply_by_user_id(user.twitter_id)
+    last_reply = mongo.get_last_reply_by_user(user.twitter_id)
 
     if last_reply is None:
         last_reply_id = None
