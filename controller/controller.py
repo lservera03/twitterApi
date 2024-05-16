@@ -75,4 +75,4 @@ def download_replies(user: User):
     replies = replies_api.get_user_replies(user.twitter_id, last_reply_id)
 
     if replies is not None:
-        mongo.save_user_replies(replies)
+        mongo.save_user_replies(replies, user)

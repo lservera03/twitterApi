@@ -19,7 +19,7 @@ def get_user_id_by_username(username):
         logging.info(username + " ID received: " + data["data"]["id"])
         return data["data"]["id"]
     else:
-        logging.info("Get user id API response error: " + str(response))
+        logging.info("Get user id API response error: " + str(data))
         return None
 
 
@@ -46,5 +46,5 @@ def get_users_id_by_username_list(usernames: []) -> [User]:
 
         return user_list
     else:
-        logging.info("Get users id API response error: " + str(response))
+        logging.info("Get users id API response error: " + str(data))
         return None

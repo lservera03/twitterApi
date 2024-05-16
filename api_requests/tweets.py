@@ -51,7 +51,7 @@ def get_user_tweets_by_user_id(user: User, last_tweet_id):
                     logging.info("Found " + str(tweets.__len__()) + " tweets for user " + user.username)
                     return tweets
             else:
-                logging.info("User tweets API request error: " + str(response))
+                logging.info("User tweets API request error: " + str(data))
                 return None
         else:
             logging.info("No tweets found for user: " + user.username)

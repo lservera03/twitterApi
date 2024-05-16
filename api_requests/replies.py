@@ -53,7 +53,7 @@ def get_user_replies(user: User, last_reply_id):
                     logging.info("Found " + str(tweets.__len__()) + " replies for user " + user.username)
                     return tweets
             else:
-                logging.info("User replies API request error: " + str(response))
+                logging.info("User replies API request error: " + str(data))
                 return None
         else:
             logging.info("No replies found for user: " + user.username)
