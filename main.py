@@ -6,9 +6,6 @@ import platform
 import controller.controller as controller
 
 
-# TODO: check if all the tweets are saved
-
-
 def main():
     check_excel = args.check_excel
     logging.info("Check excel set to: " + str(check_excel))
