@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from time import sleep
 
 import requests
@@ -29,6 +30,8 @@ def get_user_replies(user: User, last_reply_id):
             "Requesting user replies of user " + user.username + " with last reply id query parameter: " + last_reply_id)
         params["since_id"] = last_reply_id
 
+    execution_datetime = datetime.now().strftime("%d-%m-%Y")
+
     while stop is False:
         if pagination is not None:  # If it is not the first request
             logging.info("User replies request with pagination")
@@ -44,8 +47,8 @@ def get_user_replies(user: User, last_reply_id):
             if response.status_code == 200:
                 for tweet in data["data"]:
                     tweets.append(
-                        Reply(tweet["id"], tweet["text"], tweet["author_id"], tweet["lang"], "reply", user.twitter_id,
-                              tweet["conversation_id"]))
+                        Reply(tweet["id"], tweet["text"], tweet["author_id"], tweet["lang"], "reply", user.username,
+                              tweet["conversation_id"], execution_datetime))
 
                 if "next_token" in data["meta"]:  # Continue to send requests
                     pagination = data["meta"]["next_token"]

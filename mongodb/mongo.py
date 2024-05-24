@@ -121,8 +121,8 @@ def get_last_tweet_by_user(user: User):
     # Try and except to catch when there are no results of the query
     try:
         logging.info("Found last tweet of user " + user.username + " with tweet id: " + str(tweets[0]["tweet_id"]))
-        return Tweet(tweets[0]["tweet_id"], tweets[0]["text"], tweets[0]["author_id"], tweets[0]["lang"],
-                     tweets[0]["type"])
+        return Tweet(tweets[0]["tweet_id"], tweets[0]["text"], tweets[0]["author"], tweets[0]["lang"],
+                     tweets[0]["type"], tweets[0]["save_date"])
     except IndexError:
         logging.info("No last tweet found for user " + user.username)
         return None
@@ -139,8 +139,8 @@ def get_last_reply_by_user(user: User):
     # Try and except to catch when there are no results of the query
     try:
         logging.info("Found last reply for user " + user.username + " with tweet id: " + str(replies[0]["tweet_id"]))
-        return Reply(replies[0]["tweet_id"], replies[0]["text"], replies[0]["author_id"], replies[0]["lang"],
-                     replies[0]["type"], replies[0]["reply_to"], replies[0]["conversation_id"])
+        return Reply(replies[0]["tweet_id"], replies[0]["text"], replies[0]["author"], replies[0]["lang"],
+                     replies[0]["type"], replies[0]["reply_to"], replies[0]["conversation_id"], replies[0]["save_date"])
     except IndexError:
         logging.info("No last reply found for user " + user.username)
         return None
