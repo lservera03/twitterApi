@@ -8,8 +8,12 @@ import controller.controller as controller
 
 def main():
     check_excel = args.check_excel
+    execution_type = args.execution_type
+    save_date = args.save_date
     logging.info("Check excel set to: " + str(check_excel))
-    controller.execute(check_excel)
+    logging.info("Execution type: " + str(execution_type))
+    logging.info("Save date: " + save_date)
+    controller.execute(check_excel, execution_type, save_date)
 
 
 # Function to detect correctly boolean argument passed to execution
@@ -24,6 +28,8 @@ if __name__ == "__main__":
     # Needed to receive arguments when executing the script
     parser = argparse.ArgumentParser()
     parser.add_argument("--check_excel", required=True, type=boolean_string)
+    parser.add_argument("--execution_type", required=True, type=int)
+    parser.add_argument("--save_date", required=False)
     args = parser.parse_args()
 
     if platform.system() == "Darwin":

@@ -144,3 +144,26 @@ def get_last_reply_by_user(user: User):
     except IndexError:
         logging.info("No last reply found for user " + user.username)
         return None
+
+
+def get_all_tweets_by_save_date(date) -> [Tweet]:
+    db = client[db_database]
+    collection = db[db_tweet_collection]
+
+    query = {"save_date": date}
+
+    tweets = collection.find(query)
+
+    tweets_list = []
+
+    for result in tweets:
+        if result["type"] == "tweet":
+            tweets_list.append(
+                Tweet(result["tweet_id"], result["text"], result["author"], result["lang"], result["type"],
+                      result["save_date"]))
+        else:
+            tweets_list.append(
+                Reply(result["tweet_id"], result["text"], result["author"], result["lang"], result["type"],
+                      result["reply_to"], result["conversation_id"], result["save_date"]))
+
+    return tweets_list

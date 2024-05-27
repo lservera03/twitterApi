@@ -1,7 +1,7 @@
 import logging
 from time import sleep
 
-import read_excel.excel as excel
+import read_write_excel.excel as excel
 import mongodb.mongo as mongo
 import api_requests.tweets as tweets_api
 import api_requests.replies as replies_api
@@ -10,18 +10,21 @@ from model.models import *
 
 
 # Function that includes all the program sequence
-def execute(check_excel: bool):
-    # Check excel users
-    if check_excel:
-        check_users_excel()
+def execute(check_excel: bool, execution_type: int, save_date):
+    if execution_type == 1:
+        # Check excel users
+        if check_excel:
+            check_users_excel()
 
-    # Save all the users' tweets
-    users = mongo.get_all_users()
-    if len(users) != 0:
-        for user in users:
-            download_tweets(user)
-            download_replies(user)
-            sleep(60)  # 1min delay between requests needed to not exceed Twitter API max requests allowed per endpoint
+        # Save all the users' tweets
+        users = mongo.get_all_users()
+        if len(users) != 0:
+            for user in users:
+                download_tweets(user)
+                download_replies(user)
+                sleep(60)  # 1min delay between requests needed to not exceed Twitter API max requests allowed
+    elif execution_type == 2:
+        create_tweet_excel_file_by_date(save_date)
 
 
 def check_users_excel():
@@ -76,3 +79,19 @@ def download_replies(user: User):
 
     if replies is not None:
         mongo.save_user_replies(replies, user)
+
+
+def create_tweet_excel_file_by_date(date):
+    logging.info("Creating excel file for date " + date)
+
+    # get all tweets from specific date from mongo
+    tweets = mongo.get_all_tweets_by_save_date(date)
+
+    if len(tweets) != 0:
+        logging.info("Retrieved " + str(len(tweets)) + " tweets for date " + date)
+
+        # save tweets into Excel file
+        excel.save_tweets_to_excel_by_date(tweets)
+
+    else:
+        logging.error("No tweets retrieved for date " + date)

@@ -1,7 +1,10 @@
 import pandas as pd
 import config
+import mongodb.mongo as mongo
+from model.models import Tweet
 
 path = config.excel_file_path
+tweets_path = config.tweet_excel_file_path
 
 username_column = config.excel_username_column
 
@@ -32,3 +35,8 @@ def write_followers_to_excel(users_info: [{}], first_position: int):
         i += 1
 
     df.to_excel(path)
+
+
+def save_tweets_to_excel_by_date(tweets: [Tweet]):
+    # TODO create excel file and save all tweets in it with categories
+    print(tweets)
