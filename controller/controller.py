@@ -18,9 +18,14 @@ def execute(check_excel: bool, execution_type: int, save_date):
 
         # Save all the users' tweets
         users = mongo.get_all_users()
+
+        # Reverse list to favour range of tweets
+        # users.reverse()
+
         if len(users) != 0:
             for user in users:
                 download_tweets(user)
+                sleep(60)
                 download_replies(user)
                 sleep(60)  # 1min delay between requests needed to not exceed Twitter API max requests allowed
     elif execution_type == 2:
