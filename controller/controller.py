@@ -25,6 +25,8 @@ def execute(check_excel: bool, execution_type: int, save_date):
                 sleep(60)  # 1min delay between requests needed to not exceed Twitter API max requests allowed
     elif execution_type == 2:
         create_tweet_excel_file_by_date(save_date)
+    elif execution_type == 3:
+        mongo.remove_duplicated_tweets()
 
 
 def check_users_excel():

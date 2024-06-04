@@ -167,3 +167,21 @@ def get_all_tweets_by_save_date(date) -> [Tweet]:
                       result["reply_to"], result["conversation_id"], result["save_date"]))
 
     return tweets_list
+
+
+def remove_duplicated_tweets():
+    db = client[db_database]
+    collection = db[db_tweet_collection]
+
+    tweets = collection.find()
+
+    ids = []
+
+    for tweet in tweets:
+        ids.append(tweet["tweet_id"])
+
+    print("Before: " + str(ids.__len__()))
+
+    removed = list(set(ids))
+
+    print("After: " + str(removed.__len__()))
