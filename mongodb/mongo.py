@@ -182,6 +182,20 @@ def remove_duplicated_tweets():
 
     print("Before: " + str(ids.__len__()))
 
-    removed = list(set(ids))
+    unique_list = []
+    duplicate_list = []
 
-    print("After: " + str(removed.__len__()))
+    for i in ids:
+        if i not in unique_list:
+            unique_list.append(i)
+        elif i not in duplicate_list:
+            duplicate_list.append(i)
+
+    print("After: " + str(unique_list.__len__()))
+
+    print(duplicate_list)
+
+    for duplicate in duplicate_list:
+        collection.delete_one({"tweet_id": duplicate})
+
+    logging.info(str(duplicate_list.__len__()) + " duplicated tweets removed")
