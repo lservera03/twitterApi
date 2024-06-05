@@ -114,7 +114,7 @@ def get_last_tweet_by_user(user: User):
     db = client[db_database]
     collection = db[db_tweet_collection]
 
-    query = {"$and": [{"author_id": user.twitter_id}, {"type": "tweet"}]}
+    query = {"$and": [{"author": user.username}, {"type": "tweet"}]}
 
     tweets = collection.find(query).sort("tweet_id", pymongo.DESCENDING).limit(1)
 
@@ -132,7 +132,7 @@ def get_last_reply_by_user(user: User):
     db = client[db_database]
     collection = db[db_tweet_collection]
 
-    query = {"$and": [{"reply_to": user.twitter_id}, {"type": "reply"}]}
+    query = {"$and": [{"reply_to": user.username}, {"type": "reply"}]}
 
     replies = collection.find(query).sort("tweet_id", pymongo.DESCENDING).limit(1)
 

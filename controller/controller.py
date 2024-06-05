@@ -20,7 +20,7 @@ def execute(check_excel: bool, execution_type: int, save_date):
         users = mongo.get_all_users()
 
         # Reverse list to favour range of tweets
-        # users.reverse()
+        users.reverse()
 
         if len(users) != 0:
             for user in users:
@@ -60,7 +60,7 @@ def check_users_excel():
 
 def download_tweets(user: User):
     logging.info("Downloading tweets from " + user.username)
-    last_tweet = mongo.get_last_tweet_by_user(user.twitter_id)
+    last_tweet = mongo.get_last_tweet_by_user(user)
 
     if last_tweet is None:
         last_tweet_id = None
@@ -75,14 +75,14 @@ def download_tweets(user: User):
 
 def download_replies(user: User):
     logging.info("Downloading replies from " + user.username)
-    last_reply = mongo.get_last_reply_by_user(user.twitter_id)
+    last_reply = mongo.get_last_reply_by_user(user)
 
     if last_reply is None:
         last_reply_id = None
     else:
         last_reply_id = last_reply.tweet_id
 
-    replies = replies_api.get_user_replies(user.twitter_id, last_reply_id)
+    replies = replies_api.get_user_replies(user, last_reply_id)
 
     if replies is not None:
         mongo.save_user_replies(replies, user)
