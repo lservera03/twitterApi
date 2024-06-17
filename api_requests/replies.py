@@ -48,7 +48,7 @@ def get_user_replies(user: User, last_reply_id):
                 for tweet in data["data"]:
                     tweets.append(
                         Reply(tweet["id"], tweet["text"], tweet["author_id"], tweet["lang"], "reply", user.username,
-                              tweet["conversation_id"], execution_datetime))
+                              tweet["conversation_id"], execution_datetime, "false"))
 
                 if "next_token" in data["meta"]:  # Continue to send requests
                     pagination = data["meta"]["next_token"]

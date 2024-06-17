@@ -11,10 +11,11 @@ def main():
     check_excel = args.check_excel
     execution_type = config.execution_type
     save_date = config.save_date
+    user_tweet = config.user_tweet
     logging.info("Check excel set to: " + str(check_excel))
     logging.info("Execution type: " + str(execution_type))
     logging.info("Save date: " + save_date)
-    controller.execute(check_excel, execution_type, save_date)
+    controller.execute(check_excel, execution_type, save_date, user_tweet)
 
 
 # Function to detect correctly boolean argument passed to execution

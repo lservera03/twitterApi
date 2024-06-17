@@ -122,7 +122,7 @@ def get_last_tweet_by_user(user: User):
     try:
         logging.info("Found last tweet of user " + user.username + " with tweet id: " + str(tweets[0]["tweet_id"]))
         return Tweet(tweets[0]["tweet_id"], tweets[0]["text"], tweets[0]["author"], tweets[0]["lang"],
-                     tweets[0]["type"], tweets[0]["save_date"])
+                     tweets[0]["type"], tweets[0]["save_date"], tweets[0]["labeled"])
     except IndexError:
         logging.info("No last tweet found for user " + user.username)
         return None
@@ -140,7 +140,8 @@ def get_last_reply_by_user(user: User):
     try:
         logging.info("Found last reply for user " + user.username + " with tweet id: " + str(replies[0]["tweet_id"]))
         return Reply(replies[0]["tweet_id"], replies[0]["text"], replies[0]["author"], replies[0]["lang"],
-                     replies[0]["type"], replies[0]["reply_to"], replies[0]["conversation_id"], replies[0]["save_date"])
+                     replies[0]["type"], replies[0]["reply_to"], replies[0]["conversation_id"], replies[0]["save_date"],
+                     replies[0]["labeled"])
     except IndexError:
         logging.info("No last reply found for user " + user.username)
         return None
@@ -160,14 +161,50 @@ def get_all_tweets_by_save_date(date) -> [Tweet]:
         if result["type"] == "tweet":
             tweets_list.append(
                 Tweet(result["tweet_id"], result["text"], result["author"], result["lang"], result["type"],
-                      result["save_date"]))
+                      result["save_date"], result["labeled"]))
         else:
             tweets_list.append(
                 Reply(result["tweet_id"], result["text"], result["author"], result["lang"], result["type"],
-                      result["reply_to"], result["conversation_id"], result["save_date"]))
+                      result["reply_to"], result["conversation_id"], result["save_date"], result["labeled"]))
 
     return tweets_list
 
+
+def get_all_tweets_not_labeled_by_user(user) -> [Tweet]:
+    db = client[db_database]
+    collection = db[db_tweet_collection]
+
+    query = {"$and": [{"author": user}, {"labeled": "false"}, {"type": "tweet"}]}
+
+    tweets = collection.find(query)
+
+    tweets_list = []
+
+    for result in tweets:
+        tweets_list.append(Tweet(result["tweet_id"], result["text"], result["author"], result["lang"], result["type"],
+                                 result["save_date"], result["labeled"]))
+
+    return tweets_list
+
+
+def get_all_replies_not_labeled_by_user(user) -> [Tweet]:
+    db = client[db_database]
+    collection = db[db_tweet_collection]
+
+    query = {"$and": [{"reply_to": user}, {"labeled": "false"}, {"type": "reply"}]}
+
+    tweets = collection.find(query)
+
+    tweets_list = []
+
+    for result in tweets:
+        tweets_list.append(Reply(result["tweet_id"], result["text"], result["author"], result["lang"], result["type"],
+                                 result["reply_to"], result["conversation_id"], result["save_date"], result["labeled"]))
+
+    return tweets_list
+
+
+# TODO: create function to retrieve a number of tweets and responses to create excel
 
 def remove_duplicated_tweets():
     db = client[db_database]

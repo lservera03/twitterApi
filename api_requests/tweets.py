@@ -47,7 +47,7 @@ def get_user_tweets_by_user_id(user: User, last_tweet_id):
             if response.status_code == 200:
                 for tweet in data["data"]:
                     tweets.append(Tweet(tweet["id"], tweet["text"], user.username, tweet["lang"], "tweet",
-                                        execution_datetime))
+                                        execution_datetime, "false"))
 
                 if "next_token" in data["meta"]:  # Continue to send requests
                     pagination = data["meta"]["next_token"]
