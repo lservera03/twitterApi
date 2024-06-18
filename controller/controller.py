@@ -33,6 +33,8 @@ def execute(check_excel: bool, execution_type: int, save_date, user_tweet):
         create_reply_excel_file_by_user(user_tweet)
     elif execution_type == 3:
         mongo.remove_duplicated_tweets()
+    elif execution_type == 4:
+        check_tweets_replies_consistency()
 
 
 def check_users_excel():
@@ -123,3 +125,19 @@ def create_reply_excel_file_by_user(user):
         mongo.set_labeled_state_true_for_tweets(tweets)
     else:
         logging.error("No replies retrieved for user " + user)
+
+
+def check_tweets_replies_consistency():
+    good = 0
+    bad = 0
+
+    replies = mongo.get_all_replies()
+
+    for reply in replies:
+        if mongo.check_original_tweet_exists(reply.conversation_id):
+            good += 1
+        else:
+            bad += 1
+
+    print("Good: " + str(good))
+    print("Bad: " + str(bad))

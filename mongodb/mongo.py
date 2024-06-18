@@ -76,6 +76,37 @@ def get_all_users() -> [User]:
     return users_list
 
 
+def get_all_replies() -> [Reply]:
+    db = client[db_database]
+    collection = db[db_tweet_collection]
+
+    replies_list = []
+
+    replies = collection.find({"type": "reply"})
+
+    for tweet in replies:
+        replies_list.append(Reply(tweet["tweet_id"], tweet["text"], tweet["author"], tweet["lang"],
+                                  tweet["type"], tweet["reply_to"], tweet["conversation_id"],
+                                  tweet["save_date"],
+                                  tweet["labeled"]))
+
+    return replies_list
+
+
+def check_original_tweet_exists(conversation_id) -> bool:
+    db = client[db_database]
+    collection = db[db_tweet_collection]
+
+    tweet = collection.find({"tweet_id": conversation_id})
+
+    cur = list(tweet)
+
+    if len(cur) == 0:
+        return False
+    else:
+        return True
+
+
 def save_user_tweets(tweets: [Tweet], user: User):
     db = client[db_database]
     collection = db[db_tweet_collection]
