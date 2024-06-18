@@ -101,6 +101,8 @@ def create_tweet_excel_file_by_user(user):
         # save tweets into Excel file
         excel.save_tweets_to_excel(tweets)
 
+        # save labeled state of tweets into mongodb
+        mongo.set_labeled_state_true_for_tweets(tweets)
     else:
         logging.error("No tweets retrieved for user " + user)
 
@@ -117,5 +119,7 @@ def create_reply_excel_file_by_user(user):
         # save tweets into Excel file
         excel.save_replies_to_excel(tweets)
 
+        # save labeled state of replies into mongodb
+        mongo.set_labeled_state_true_for_tweets(tweets)
     else:
         logging.error("No replies retrieved for user " + user)

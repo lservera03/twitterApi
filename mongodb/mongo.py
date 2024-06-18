@@ -204,6 +204,18 @@ def get_all_replies_not_labeled_by_user(user) -> [Tweet]:
     return tweets_list
 
 
+def set_labeled_state_true_for_tweets(tweets: [Tweet]):
+    db = client[db_database]
+    collection = db[db_tweet_collection]
+
+    for tweet in tweets:
+        myquery = {"tweet_id": tweet.tweet_id}
+        newvalues = {"$set": {"labeled": "true"}}
+        collection.update_one(myquery, newvalues)
+
+    logging.info("Set labeled state for tweets")
+
+
 # TODO: create function to retrieve a number of tweets and responses to create excel
 
 def remove_duplicated_tweets():
