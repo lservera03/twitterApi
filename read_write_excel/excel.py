@@ -12,6 +12,7 @@ replies_path = config.replies_excel_file_path
 tweets_path = config.tweets_excel_file_path
 
 username_column = config.excel_username_column
+genre_column = "Gènere"
 
 
 def get_usernames_from_excel():
@@ -22,10 +23,31 @@ def get_usernames_from_excel():
     usernames = df[username_column]
 
     for username in usernames:
+        username = str(username)
         if username[0] == "@":
             aux.append(username[1:])
         else:
             aux.append(username)
+
+    return aux
+
+
+def get_username_genres_from_excel():
+    df = pd.read_excel(path)
+
+    i = 0
+    aux = []
+    usernames = df[username_column]
+    genres = df[genre_column]
+
+    for username in usernames:
+        username = str(username)
+        if username != "nan":
+            if username[0] == "@":
+                aux.append({"username": username[1:], "genre": genres[i]})
+            else:
+                aux.append({"username": username, "genre": genres[i]})
+        i += 1
 
     return aux
 
@@ -90,8 +112,6 @@ def save_tweets_to_excel(tweets: [Tweet]):
         id_list.append(tweet.tweet_id)
         text_list.append(tweet.text)
 
-    # TODO: fix some issues with categories and labels in columns
-
     df = pd.DataFrame({"Tweet id": id_list, "Tweet": text_list})
 
     df.to_excel(tweets_path)
@@ -135,8 +155,6 @@ def save_replies_to_excel(replies: [Reply]):
         id_list.append(tweet.tweet_id)
         text_list.append(tweet.text)
         conversation_list.append(tweet.conversation_id)
-
-    # TODO: fix some issues with categories and labels in columns
 
     df = pd.DataFrame({"Tweet id": id_list, "Conversation id": conversation_list, "Tweet": text_list})
 

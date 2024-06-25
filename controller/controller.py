@@ -35,6 +35,8 @@ def execute(check_excel: bool, execution_type: int, save_date, user_tweet):
         mongo.remove_duplicated_tweets()
     elif execution_type == 4:
         check_tweets_replies_consistency()
+    elif execution_type == 5:
+        save_username_genres()
 
 
 def check_users_excel():
@@ -141,3 +143,14 @@ def check_tweets_replies_consistency():
 
     print("Good: " + str(good))
     print("Bad: " + str(bad))
+
+
+def save_username_genres():
+    logging.info("Saving username genres for all users")
+
+    aux = excel.get_username_genres_from_excel()
+
+    for user in aux:
+        mongo.save_username_genre(user["username"], user["genre"])
+
+    logging.info("Saved username genres for all users")

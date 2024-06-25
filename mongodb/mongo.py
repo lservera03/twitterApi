@@ -279,3 +279,12 @@ def remove_duplicated_tweets():
         collection.delete_one({"tweet_id": duplicate})
 
     logging.info(str(duplicate_list.__len__()) + " duplicated tweets removed")
+
+
+def save_username_genre(username, genre):
+    db = client[db_database]
+    collection = db[db_user_collection]
+
+    collection.update_one({"username": username}, {"$set": {"genre": genre}})
+
+    logging.info("Saved username " + username + " genre" + str(genre))
