@@ -184,7 +184,7 @@ def save_replies_to_excel(replies: [Reply]):
 
     ws.add_data_validation(dv)
 
-    dv1 = DataValidation(type="list", formula1='"0, 1, 2, 3"', allow_blank=False)
+    dv1 = DataValidation(type="list", formula1='"0, 1, 2, 3, 4"', allow_blank=False)
 
     dv1.error = 'Your entry is not in the list'
     dv1.errorTitle = 'Invalid Entry'
