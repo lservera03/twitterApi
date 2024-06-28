@@ -123,7 +123,7 @@ def save_tweets_to_excel(tweets: [Tweet]):
     ws.cell(row=1, column=4).value = "Theme"
 
     dv = DataValidation(type="list",
-                        formula1='"Immigration, Gender, Ukraine, Israel/Palestina, EU Elections, Sports, National Politics, Climate Change, Economy and Finance, Healthcare, International Politics, Culture, Science and Technology"',
+                        formula1='"Immigration, Gender, Ukraine, Israel/Palestina, EU Elections, Sports, National Politics, Climate Change, Economy and Finance, Healthcare, International Politics, Culture, Science and Technology, Society, Celebrities, Media, Other"',
                         allow_blank=False)
 
     dv.error = 'Your entry is not in the list'
