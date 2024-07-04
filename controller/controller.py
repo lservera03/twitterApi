@@ -1,6 +1,8 @@
 import logging
 from time import sleep
 
+import pandas as pd
+
 import read_write_excel.excel as excel
 import mongodb.mongo as mongo
 import api_requests.tweets as tweets_api
@@ -37,6 +39,8 @@ def execute(check_excel: bool, execution_type: int, save_date, user_tweet):
         check_tweets_replies_consistency()
     elif execution_type == 5:
         save_username_genres()
+    elif execution_type == 6:
+        create_file_number_tweets()
 
 
 def check_users_excel():
@@ -154,3 +158,20 @@ def save_username_genres():
         mongo.save_username_genre(user["username"], user["genre"])
 
     logging.info("Saved username genres for all users")
+
+
+def create_file_number_tweets():
+    logging.info("Creating file number tweets for all users")
+
+    users = mongo.get_all_users()
+
+    dictionary = []
+
+    for user in users:
+        count = mongo.get_count_tweets_replies_by_user(user.username)
+        dictionary.append({"username": user.username , "Tweets + replies": count})
+
+    df = pd.DataFrame(dictionary)
+
+    df.to_csv("data/user_tweets.csv")
+

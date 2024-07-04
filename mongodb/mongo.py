@@ -288,3 +288,14 @@ def save_username_genre(username, genre):
     collection.update_one({"username": username}, {"$set": {"genre": genre}})
 
     logging.info("Saved username " + username + " genre" + str(genre))
+
+
+def get_count_tweets_replies_by_user(username):
+    db = client[db_database]
+    collection = db[db_tweet_collection]
+
+    tweets = collection.count_documents({"author": username})
+
+    replies = collection.count_documents({"reply_to": username})
+
+    return tweets + replies
